@@ -14,9 +14,9 @@ export default async function Dashboard() {
   const [st] = await q("SELECT (SELECT count(*) FROM users)::int members, count(*)::int total, count(*) FILTER (WHERE status='done')::int done, count(*) FILTER (WHERE created_at > now() - interval '30 days')::int added FROM tasks");
   const [ide] = await q("SELECT count(*)::int n, count(*) FILTER (WHERE created_at > now() - interval '7 days')::int fresh FROM ideas");
   const [pend] = await q("SELECT count(*)::int n FROM submissions WHERE status='pending'");
-  const prio = await q("SELECT t.id,t.title,t.status,t.due::text due,u.name assignee FROM tasks t LEFT JOIN users u ON u.id=t.assignee_id WHERE t.status<>'done' ORDER BY (t.priority='High') DESC, t.due NULLS LAST LIMIT 5");
-  const act = await q(`SELECT a.text,a.subject,a.icon,${iso("a.created_at")} at,u.name FROM activity a LEFT JOIN users u ON u.id=a.user_id ORDER BY a.id DESC LIMIT 5`);
-  const soon = await q("SELECT title,due::text due FROM tasks WHERE status<>'done' AND due >= CURRENT_DATE ORDER BY due LIMIT 3");
+  const prio = await q("SELECT t.id,t.title,t.status,t.due::text due,u.name assignee FROM tasks t LEFT JOIN users u ON u.id=t.assignee_id WHERE t.status<>'done' AND ($1 OR u.role IS DISTINCT FROM 'admin') ORDER BY (t.priority='High') DESC, t.due NULLS LAST LIMIT 5", [u.role === "admin"]);
+  const act = await q(`SELECT a.text,a.subject,a.icon,${iso("a.created_at")} at,u.name FROM activity a LEFT JOIN users u ON u.id=a.user_id WHERE ($1 OR u.role IS DISTINCT FROM 'admin') ORDER BY a.id DESC LIMIT 5`, [u.role === "admin"]);
+  const soon = await q("SELECT t.title,t.due::text due FROM tasks t LEFT JOIN users u ON u.id=t.assignee_id WHERE t.status<>'done' AND t.due >= CURRENT_DATE AND ($1 OR u.role IS DISTINCT FROM 'admin') ORDER BY t.due LIMIT 3", [u.role === "admin"]);
   const users = await q("SELECT id,name FROM users ORDER BY name");
   const pct = st.total ? Math.round((st.done / st.total) * 100) : 0;
   const hour = new Date().toLocaleString("en-US", { hour: "numeric", hour12: false, timeZone: "Africa/Cairo" });

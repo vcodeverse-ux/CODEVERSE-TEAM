@@ -6,8 +6,8 @@ import { fmtDateTime } from "@/lib/format";
 const ICON = { up: "⇧", idea: "✧", check: "✓", user: "♙", task: "☷", file: "▱", chat: "☏", db: "▤", cal: "◫", dot: "•" };
 
 export default async function Activity() {
-  await requireUser();
-  const rows = await q(`SELECT a.text,a.subject,a.icon,${iso("a.created_at")} at,u.name FROM activity a LEFT JOIN users u ON u.id=a.user_id ORDER BY a.id DESC LIMIT 100`);
+  const me = await requireUser();
+  const rows = await q(`SELECT a.text,a.subject,a.icon,${iso("a.created_at")} at,u.name FROM activity a LEFT JOIN users u ON u.id=a.user_id WHERE ($1 OR u.role IS DISTINCT FROM 'admin') ORDER BY a.id DESC LIMIT 100`, [me.role === "admin"]);
   return (
     <>
       <Heading title="Activity Logs" sub="A transparent record of important workspace actions." />

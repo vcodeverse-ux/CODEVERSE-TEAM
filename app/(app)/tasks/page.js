@@ -12,8 +12,8 @@ export default async function Tasks({ searchParams }) {
   const users = await q("SELECT id,name FROM users ORDER BY name");
   const rows = await q(
     `SELECT t.id,t.title,t.category,t.priority,t.status,t.due::text due,t.assignee_id,u.name assignee FROM tasks t LEFT JOIN users u ON u.id=t.assignee_id
-     WHERE ($1='' OR t.title ILIKE '%'||$1||'%' OR t.category ILIKE '%'||$1||'%') AND ($2='' OR t.status=$2) AND ($3='' OR t.assignee_id::text=$3)
-     ORDER BY (t.status='done'), t.due NULLS LAST, t.id`, [term, status, who]);
+     WHERE ($1='' OR t.title ILIKE '%'||$1||'%' OR t.category ILIKE '%'||$1||'%') AND ($2='' OR t.status=$2) AND ($3='' OR t.assignee_id::text=$3) AND ($4 OR u.role IS DISTINCT FROM 'admin')
+     ORDER BY (t.status='done'), t.due NULLS LAST, t.id`, [term, status, who, u.role === "admin"]);
   const mgr = isManager(u);
   return (
     <>

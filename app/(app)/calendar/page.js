@@ -8,7 +8,7 @@ import { fmtDateTime, fmtDate } from "@/lib/format";
 export default async function Calendar() {
   const u = await requireUser();
   const ev = await q(`SELECT title,kind,${iso("starts_at")} at,starts_at FROM events WHERE starts_at >= now() - interval '1 day'`);
-  const due = await q("SELECT t.title,t.due::text due,u.name FROM tasks t LEFT JOIN users u ON u.id=t.assignee_id WHERE t.status<>'done' AND t.due >= CURRENT_DATE - 1");
+  const due = await q("SELECT t.title,t.due::text due,u.name FROM tasks t LEFT JOIN users u ON u.id=t.assignee_id WHERE t.status<>'done' AND t.due >= CURRENT_DATE - 1 AND ($1 OR u.role IS DISTINCT FROM 'admin')", [u.role === "admin"]);
   const items = [
     ...ev.map((e) => ({ title: e.title, when: e.at, label: fmtDateTime(e.at), kind: e.kind, cls: e.kind === "Deadline" ? "s-review" : "s-progress" })),
     ...due.map((d) => ({ title: d.title + (d.name ? " (" + d.name + ")" : ""), when: d.due + "T23:59:00Z", label: fmtDate(d.due) + " · task deadline", kind: "Task due", cls: "s-pending" })),
