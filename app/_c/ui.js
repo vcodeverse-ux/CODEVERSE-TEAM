@@ -1,7 +1,11 @@
 import { STATUS, initials } from "@/lib/format";
 
 export const Pill = ({ s, children }) => { const [l, c] = STATUS[s] || [s, "s-pending"]; return <span className={"status " + c}>{children || l}</span>; };
-export const Avatar = ({ name, size }) => <div className="avatar" style={size ? { width: size, height: size, fontSize: size / 3 } : undefined}>{initials(name)}</div>;
+export const Avatar = ({ name, size, id, av }) => (
+  <div className="avatar" style={size ? { width: size, height: size, fontSize: size / 3 } : undefined}>
+    {id && av ? <img src={`/avatar/${id}?v=${av}`} alt="" className="avatarimg" /> : initials(name)}
+  </div>
+);
 export const Field = ({ label, children }) => <><label>{label}</label>{children}</>;
 export const Actions = ({ children }) => <div className="modalactions">{children}</div>;
 export function Heading({ title, sub, children }) {

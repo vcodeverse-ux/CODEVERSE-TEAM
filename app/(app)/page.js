@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { q, iso } from "@/lib/db";
-import { requireUser } from "@/lib/auth";
+import { requireUser, isManager } from "@/lib/auth";
 import Modal from "../_c/Modal";
 import { Pill, Heading, Field, Actions } from "../_c/ui";
 import { createTask } from "@/lib/actions";
@@ -24,7 +24,7 @@ export default async function Dashboard() {
   return (
     <>
       <Heading title={`${greet}, ${u.name.split(" ")[0]} 👋`} sub="Here's what's happening with your project today.">
-        <Modal label="＋ Create new task" title="Create a new task"><TaskForm users={users} me={u} action={createTask} /></Modal>
+        {isManager(u) && <Modal label="＋ Create new task" title="Create a new task"><TaskForm users={users} me={u} action={createTask} /></Modal>}
       </Heading>
       <div className="stats">
         <div className="card stat"><div className="stathead">Team Members <span className="staticon">♙</span></div><strong>{st.members}</strong><span className="trend">● Active workspace</span></div>

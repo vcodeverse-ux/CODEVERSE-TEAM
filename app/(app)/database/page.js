@@ -17,11 +17,11 @@ export default async function Database({ searchParams }) {
   return (
     <>
       <Heading title="Project Database" sub="Your central knowledge base for project information.">
-        <Modal label="＋ Add record" title="Add a record"><form action={addRecord}>
+        {isManager(u) && <Modal label="＋ Add record" title="Add a record"><form action={addRecord}>
           <Field label="Title"><input name="title" required /></Field>
           <Field label="Category"><select name="category">{CATS.map((c) => <option key={c}>{c}</option>)}</select></Field>
           <Field label="Content"><textarea name="body" placeholder="Notes, decisions, specifications..." /></Field>
-          <Actions><button className="btn">Save record</button></Actions></form></Modal>
+          <Actions><button className="btn">Save record</button></Actions></form></Modal>}
       </Heading>
       <div className="toolbar"><form><input className="search" name="q" defaultValue={term} placeholder="⌕  Search records..." /><input type="hidden" name="cat" value={cat} /><button className="btn secondary">Search</button></form></div>
       <div className="gridmain">

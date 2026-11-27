@@ -15,9 +15,9 @@ export default async function Files({ searchParams }) {
   return (
     <>
       <Heading title="File Center" sub="Shared project files, organized in one place.">
-        <Modal label="⇧ Upload file" title="Upload a file"><form action={uploadFile}>
+        {isManager(u) && <Modal label="⇧ Upload file" title="Upload a file"><form action={uploadFile}>
           <Field label="File (up to 3 MB)"><input type="file" name="file" required /></Field>
-          <Actions><button className="btn">Upload</button></Actions></form></Modal>
+          <Actions><button className="btn">Upload</button></Actions></form></Modal>}
       </Heading>
       {err && <Notice bad>That file is larger than 3 MB.</Notice>}
       <div className="toolbar"><form><input className="search" name="q" defaultValue={term} placeholder="⌕  Search files..." /><button className="btn secondary">Search</button></form></div>

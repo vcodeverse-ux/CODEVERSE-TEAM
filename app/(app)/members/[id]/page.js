@@ -10,7 +10,7 @@ export default async function MemberProgress({ params }) {
   const u = await requireUser();
   if (!isManager(u)) redirect("/");
   const { id } = await params;
-  const [m] = await q("SELECT id,name,email,role,team FROM users WHERE id=$1", [Number(id) || 0]);
+  const [m] = await q("SELECT id,name,email,role,team,floor(extract(epoch from avatar_at))::int AS av FROM users WHERE id=$1", [Number(id) || 0]);
   if (!m) notFound();
   if (m.role === "admin" && u.role !== "admin") redirect("/members");
   const tasks = await q("SELECT id,title,category,due,priority,status FROM tasks WHERE assignee_id=$1 ORDER BY (status='done'), due NULLS LAST", [m.id]);
@@ -20,7 +20,7 @@ export default async function MemberProgress({ params }) {
     <>
       <Heading title={m.name} sub={m.team + " · " + m.email}><Link className="btn secondary" href="/members">Back to members</Link></Heading>
       <div className="card" style={{ padding: 20, marginBottom: 16 }}>
-        <div style={{ display: "flex", gap: 14, alignItems: "center" }}><Avatar name={m.name} />
+        <div style={{ display: "flex", gap: 14, alignItems: "center" }}><Avatar name={m.name} id={m.id} av={m.av} />
           <div><b>{done} done · {tasks.length - done} not done</b><br /><small>{pct}% of assigned tasks completed</small></div></div>
         <div style={{ background: "#e5e9f2", borderRadius: 8, height: 10, marginTop: 14 }}><div style={{ width: pct + "%", background: "#2f6bed", height: 10, borderRadius: 8 }} /></div>
       </div>

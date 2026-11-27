@@ -18,7 +18,7 @@ export default async function Tasks({ searchParams }) {
   return (
     <>
       <Heading title="Tasks Management" sub="Assign work, track progress and manage deadlines.">
-        <Modal label="＋ Create task" title="Create a new task"><TaskForm users={users} me={u} action={createTask} /></Modal>
+        {isManager(u) && <Modal label="＋ Create task" title="Create a new task"><TaskForm users={users} me={u} action={createTask} /></Modal>}
       </Heading>
       {err && <Notice bad>That file is larger than 3 MB.</Notice>}
       <div className="toolbar"><form>

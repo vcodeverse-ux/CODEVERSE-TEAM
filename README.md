@@ -2,11 +2,8 @@
 
 Team workspace: tasks, submissions with file upload and review, ideas with voting, a project database, shared files, discussions, calendar, members and an activity feed. Built with Next.js (App Router, server actions) and PostgreSQL.
 
-## Login
-Demo accounts use the password `TeamCore#2026`.
-Admin: adham.aiman@teamcore.dev
-Leader: mariam.ali@teamcore.dev
-Member: ahmed.hassan@teamcore.dev
+## First login
+A fresh database gets one admin: admin@teamcore.dev with password ChangeMe#2026 (or set ADMIN_EMAIL and ADMIN_PASSWORD env vars before the first deploy). Log in, add the real admins from Team Members, then change the password.
 
 ## Architecture
 - app/: pages (server components) and API routes
@@ -26,4 +23,4 @@ Without DATABASE_URL it uses an embedded local Postgres (PGlite) in .pgdata.
 2. Push this repo to GitHub.
 3. On Vercel, import the repo (Hobby plan is free).
 4. In Environment Variables add DATABASE_URL (the Neon string) and SESSION_SECRET (any long random text).
-5. Deploy. Tables and demo data are created on the first request.
+5. Deploy. Tables are created on the first request.

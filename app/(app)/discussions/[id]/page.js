@@ -11,12 +11,12 @@ export default async function Thread({ params }) {
   const { id } = await params;
   const [t] = await q("SELECT id,title,topic FROM threads WHERE id=$1", [Number(id) || 0]);
   if (!t) notFound();
-  const msgs = await q(`SELECT r.body,${iso("r.created_at")} at,u.name FROM replies r LEFT JOIN users u ON u.id=r.author_id WHERE r.thread_id=$1 ORDER BY r.id`, [t.id]);
+  const msgs = await q(`SELECT u.id uid,floor(extract(epoch from u.avatar_at))::int AS av,r.body,${iso("r.created_at")} at,u.name FROM replies r LEFT JOIN users u ON u.id=r.author_id WHERE r.thread_id=$1 ORDER BY r.id`, [t.id]);
   return (
     <>
       <Heading title={t.title} sub={t.topic + " discussion"}><Link href="/discussions" className="btn secondary">← All discussions</Link></Heading>
       <div className="card panel">
-        {msgs.map((m, i) => (<div className="thread-msg" key={i}><Avatar name={m.name} /><div><b style={{ fontSize: 12 }}>{m.name}</b> <small className="sub">{ago(m.at)}</small><p>{m.body}</p></div></div>))}
+        {msgs.map((m, i) => (<div className="thread-msg" key={i}><Avatar name={m.name} id={m.uid} av={m.av} /><div><b style={{ fontSize: 12 }}>{m.name}</b> <small className="sub">{ago(m.at)}</small><p>{m.body}</p></div></div>))}
       </div>
       <form action={addReply} className="card panel"><input type="hidden" name="thread" value={t.id} />
         <label style={{ fontSize: 11, fontWeight: 700 }}>Your reply</label>

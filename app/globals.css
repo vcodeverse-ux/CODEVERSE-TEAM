@@ -42,3 +42,6 @@ dialog.modal::backdrop{background:#10182888}
 .stat strong.warn{color:var(--amber)}
 .late{color:var(--red)!important;font-weight:650}
 .pageerr{margin-bottom:14px}
+
+.avatar{overflow:hidden;flex-shrink:0}.avatarimg{width:100%;height:100%;object-fit:cover;display:block}
+.ideaimgs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.ideaimg{position:relative;display:block}.ideaimg img{width:86px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--line);display:block}.ideaimg form{position:absolute;top:2px;right:2px}.x,.x2{background:#000a;color:#fff;border:0;border-radius:50%;width:18px;height:18px;font-size:10px;cursor:pointer;padding:0}.x2{background:#fdeceb;color:#b3363f;margin-left:4px}.ideamats{display:grid;gap:4px;margin:6px 0;font-size:11px}.ideamats a{color:#2f6bed;font-weight:600}.imgprev{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.imgprev img{width:64px;height:48px;object-fit:cover;border-radius:6px}
